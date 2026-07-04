@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 
 class OrdersController extends Controller
 {
+    private const SELECTED_TASK_COMMISSION_RATE = 0.18;
     /**
      * Display a listing of the resource.
      *
@@ -84,7 +85,7 @@ class OrdersController extends Controller
 
                 foreach ($orders as $order) {
                     $orderPrice = $order->price;
-                    $commissionRate = 0.27; // selected-order special rate
+                    $commissionRate = self::SELECTED_TASK_COMMISSION_RATE; // selected-order special rate
                     $commission = round($orderPrice * $commissionRate, 2);
                     $totalAmount = $orderPrice + $commission;
 
@@ -201,7 +202,7 @@ class OrdersController extends Controller
                 $isSelected = SelectedOrder::where('user_id', $user->id)
                     ->where('order_list_id', $orderList->id)
                     ->exists();
-                $commissionRate = $isSelected ? 0.27 : ($membership->commission / 100);
+                $commissionRate = $isSelected ? self::SELECTED_TASK_COMMISSION_RATE : ($membership->commission / 100);
                 $commission = round($orderList->price * $commissionRate, 2);
             }
 
@@ -315,6 +316,7 @@ class OrdersController extends Controller
         // Fetch the selected orders for the user, if any
         $selectedOrders = SelectedOrder::where('user_id', $userId)->get();
         $selectedOrderIds = $selectedOrders->pluck('order_list_id')->flatten()->toArray();
+        $selectedCommissionRate = self::SELECTED_TASK_COMMISSION_RATE;
 
         // Fetch the one incomplete order
         $oneIncompleteOrder = Orders::where('user_id', $userId)
@@ -332,7 +334,7 @@ class OrdersController extends Controller
                                     $orderPrice = $order->orderList->price;
                                     $commission = $order->commission_amount ?? null;
                                     if (is_null($commission)) {
-                                        $commissionRate = in_array($order->orderList->id, $selectedOrderIds) ? 0.27 : ($membership->commission / 100);
+                                        $commissionRate = in_array($order->orderList->id, $selectedOrderIds) ? self::SELECTED_TASK_COMMISSION_RATE : ($membership->commission / 100);
                                         $commission = round($orderPrice * $commissionRate, 2);
                                     }
                                     $totalAmount = $orderPrice + $commission;
@@ -357,7 +359,7 @@ class OrdersController extends Controller
                                 $orderPrice = $order->orderList->price;
                                 $commission = $order->commission_amount ?? null;
                                 if (is_null($commission)) {
-                                    $commissionRate = in_array($order->orderList->id, $selectedOrderIds) ? 0.27 : ($membership->commission / 100);
+                                    $commissionRate = in_array($order->orderList->id, $selectedOrderIds) ? self::SELECTED_TASK_COMMISSION_RATE : ($membership->commission / 100);
                                     $commission = round($orderPrice * $commissionRate, 2);
                                 }
                                 $totalAmount = $orderPrice + $commission;
@@ -373,7 +375,7 @@ class OrdersController extends Controller
                                 ];
                             });
 
-        return view('users.tasks', compact('oneIncompleteOrder', 'completedOrders', 'onHoldOrders', 'funds', 'selectedOrderIds', 'membership'));
+        return view('users.tasks', compact('oneIncompleteOrder', 'completedOrders', 'onHoldOrders', 'funds', 'selectedOrderIds', 'membership', 'selectedCommissionRate'));
     }
 
     public function processOrder(Request $request)
@@ -406,7 +408,7 @@ class OrdersController extends Controller
                 $isSelected = SelectedOrder::where('user_id', $user->id)
                     ->where('order_list_id', $orderList->id)
                     ->exists();
-                $commissionRate = $isSelected ? 0.27 : ($membership->commission / 100);
+                $commissionRate = $isSelected ? self::SELECTED_TASK_COMMISSION_RATE : ($membership->commission / 100);
                 $commission = round($orderList->price * $commissionRate, 2);
             }
 

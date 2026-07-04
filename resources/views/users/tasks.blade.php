@@ -8,6 +8,7 @@
   $oneIncomplete = $oneIncompleteOrder ?? null;
   $membershipObj = $membership         ?? null;
   $commRate      = ($membershipObj->commission ?? 0) / 100;
+  $selectedRate  = $selectedCommissionRate ?? 0.18;
   $userFunds     = $funds              ?? 0;
 
   $pendingCount   = $oneIncomplete ? 1 : 0;
@@ -53,7 +54,8 @@
             @if ($oneIncomplete)
                 @php
                     $price = $oneIncomplete->orderList->price ?? 0;
-                    $comm  = $oneIncomplete->commission_amount ?? round($price * $commRate, 2);
+                    $isSelectedTask = in_array($oneIncomplete->orderList->id ?? 0, $selectedOrderIds ?? []);
+                    $comm  = $oneIncomplete->commission_amount ?? round($price * ($isSelectedTask ? $selectedRate : $commRate), 2);
                 @endphp
                 <div class="on-order-row">
                     @if (!empty($oneIncomplete->orderList->image))
@@ -111,7 +113,8 @@
             @if ($oneIncomplete)
                 @php
                     $price = $oneIncomplete->orderList->price ?? 0;
-                    $comm  = $price * $commRate;
+                    $isSelectedTask = in_array($oneIncomplete->orderList->id ?? 0, $selectedOrderIds ?? []);
+                    $comm  = $price * ($isSelectedTask ? $selectedRate : $commRate);
                 @endphp
                 <div class="on-order-row">
                     @if (!empty($oneIncomplete->orderList->image))
