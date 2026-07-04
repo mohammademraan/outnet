@@ -287,6 +287,8 @@
 
     </footer>
 
+    @include('users.layouts.chatway')
+
     <!-- ══════════════════════════════════ SCRIPTS ═══════════════════════════════════ -->
     <script src="{{ asset('user/vendors/popper/popper.min.js') }}"></script>
     <script src="{{ asset('user/vendors/bootstrap/bootstrap.min.js') }}"></script>
