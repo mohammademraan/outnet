@@ -1,0 +1,548 @@
+/* Styles for user profile page (profile.blade.php) */
+.profile-avatar { border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:800; color:#fff; }
+.avatar-preview { width:68px; height:68px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:26px; font-weight:800; color:#fff; background:linear-gradient(135deg,var(--primary),var(--accent)); border:3px solid var(--primary-light); }
+.profile-stats { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+.profile-stat { text-align:center; }
+.profile-stat-value { font-family:'Space Mono',monospace; font-weight:700; font-size:20px; }
+.profile-stat-label { font-size:11px; color:var(--text-muted); margin-top:3px; }
+@media(max-width:600px) { .profile-stats { grid-template-columns:repeat(2,1fr); } }
+
+/* Credibility progress */
+.credibility-wrap{display:flex;align-items:center;gap:12px}
+.credibility-track{width:160px;height:10px;border-radius:999px;background:rgba(0,0,0,0.06);overflow:hidden}
+.credibility-fill{height:100%;width:0;background:linear-gradient(90deg,#f6d365,#fda085);transition:width 900ms ease}
+.credibility-value{font-weight:700;color:var(--success)}
+
+.ref-link-box{display:flex;gap:8px;align-items:center}
+.btn-copy{background:transparent;border:1px solid var(--border);padding:6px 10px;border-radius:6px;cursor:pointer}
+
+/* ============================================================
+   RECHARGE PAGE - MOBILE RESPONSIVE STYLES
+   ============================================================ */
+
+/* Main container - responsive grid layout */
+.recharge-container {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 22px;
+    align-items: start;
+}
+
+/* Payment Methods Grid - Responsive */
+.payment-methods {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.pay-method {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--dark2);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    min-height: 100px;
+}
+
+.pay-method:hover {
+    transform: translateY(-4px);
+    border-color: var(--primary-light);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.pay-method-icon {
+    font-size: 28px;
+    margin-bottom: 6px;
+    display: block;
+}
+
+.pay-method-name {
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+    line-height: 1.2;
+}
+
+.pay-method-tag {
+    font-size: 10px;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+/* Amount Presets - Responsive Grid */
+.amount-presets {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.amount-preset {
+    padding: 12px 8px;
+    font-size: 13px;
+    font-weight: 600;
+    border: 1px solid var(--border);
+    background: var(--dark2);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: var(--text-primary);
+}
+
+.amount-preset:hover {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+}
+
+.amount-preset:active {
+    transform: scale(0.95);
+}
+
+/* Form inputs - touch-friendly */
+.form-input {
+    padding: 14px !important;
+    font-size: 16px !important;
+    border-radius: var(--radius-sm) !important;
+    border: 1px solid var(--border) !important;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.form-input:focus {
+    border-color: var(--primary-light) !important;
+    outline: none;
+}
+
+/* Upload Zone - Mobile Friendly */
+.upload-zone {
+    border: 2px dashed var(--border);
+    border-radius: var(--radius-sm);
+    padding: 28px 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: rgba(0, 0, 0, 0.02);
+    position: relative;
+    margin-bottom: 16px;
+}
+
+.upload-zone:hover {
+    border-color: var(--primary-light);
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.upload-zone input[type="file"] {
+    display: none;
+}
+
+.upload-zone-icon {
+    font-size: 36px;
+    margin-bottom: 8px;
+}
+
+.upload-zone-text {
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+/* Balance Display - Responsive */
+.balance-display {
+    background: var(--dark2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.balance-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+    display: block;
+}
+
+.balance-amount {
+    font-family: 'Space Mono', monospace;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--primary-light);
+}
+
+/* Instructions Card - Responsive */
+.instructions-card {
+    position: sticky;
+    top: 88px;
+}
+
+.instructions-card .info-card {
+    margin-bottom: 20px;
+}
+
+.min-max-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.min-max-item {
+    background: var(--dark2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px;
+    text-align: center;
+}
+
+.min-max-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+    display: block;
+}
+
+.min-max-value {
+    font-family: 'Space Mono', monospace;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+/* Section Labels */
+.section-label-inline {
+    display: block;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text-primary);
+    margin: 16px 0 12px 0;
+}
+
+/* Button Styles */
+.btn-primary {
+    padding: 14px 16px !important;
+    font-size: 15px !important;
+    border-radius: var(--radius-sm) !important;
+    font-weight: 600 !important;
+    width: 100%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:active {
+    transform: scale(0.98);
+}
+
+/* Error messages */
+.error-message {
+    color: var(--danger);
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+/* Form group styling */
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+/* ==============================================
+   TABLET BREAKPOINT (768px and above)
+   ============================================== */
+@media (min-width: 768px) {
+    .recharge-container {
+        grid-template-columns: 1.5fr 1fr;
+    }
+
+    .payment-methods {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .amount-presets {
+        grid-template-columns: repeat(6, 1fr);
+    }
+
+    .pay-method {
+        min-height: 110px;
+        padding: 16px 12px;
+    }
+
+    .pay-method-icon {
+        font-size: 32px;
+    }
+
+    .balance-amount {
+        font-size: 28px;
+    }
+
+    .instructions-card {
+        position: sticky;
+        top: 88px;
+    }
+}
+
+/* ==============================================
+   MOBILE BREAKPOINT (below 768px)
+   ============================================== */
+@media (max-width: 767px) {
+    .recharge-container {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 20px;
+        align-items: auto;
+    }
+
+    .instructions-card {
+        position: relative;
+        top: auto;
+        order: 2;
+    }
+
+    .payment-methods {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .amount-presets {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+
+    .amount-preset {
+        padding: 10px 6px;
+        font-size: 12px;
+    }
+
+    .pay-method {
+        min-height: 90px;
+        padding: 12px 8px;
+    }
+
+    .pay-method-icon {
+        font-size: 24px;
+        margin-bottom: 4px;
+    }
+
+    .pay-method-name {
+        font-size: 12px;
+        margin-bottom: 2px;
+    }
+
+    .pay-method-tag {
+        font-size: 9px;
+    }
+
+    .form-input {
+        padding: 12px !important;
+        font-size: 16px !important;
+    }
+
+    .upload-zone {
+        padding: 24px 12px;
+    }
+
+    .upload-zone-icon {
+        font-size: 32px;
+        margin-bottom: 6px;
+    }
+
+    .upload-zone-text {
+        font-size: 12px;
+    }
+
+    .section-label-inline {
+        font-size: 13px;
+        margin: 14px 0 10px 0;
+    }
+
+    .balance-display {
+        padding: 14px;
+        margin-bottom: 18px;
+    }
+
+    .balance-label {
+        font-size: 9px;
+        margin-bottom: 4px;
+    }
+
+    .balance-amount {
+        font-size: 20px;
+    }
+
+    .min-max-grid {
+        gap: 10px;
+        margin-bottom: 14px;
+    }
+
+    .min-max-item {
+        padding: 10px;
+    }
+
+    .min-max-label {
+        font-size: 9px;
+        margin-bottom: 3px;
+    }
+
+    .min-max-value {
+        font-size: 16px;
+    }
+
+    .btn-primary {
+        padding: 12px 14px !important;
+        font-size: 14px !important;
+        margin-top: 6px !important;
+    }
+
+    .card {
+        border-radius: var(--radius-sm) !important;
+    }
+
+    .card-header {
+        padding: 14px !important;
+    }
+
+    .card-body {
+        padding: 14px !important;
+    }
+
+    .card-title {
+        font-size: 16px !important;
+    }
+
+    .info-card {
+        padding: 12px !important;
+        font-size: 12px !important;
+        margin-bottom: 16px !important;
+    }
+
+    .form-group {
+        margin-bottom: 14px;
+    }
+
+    .form-label {
+        font-size: 12px;
+        margin-bottom: 6px;
+    }
+
+    ol {
+        padding-left: 16px !important;
+        gap: 8px !important;
+    }
+
+    ol li {
+        font-size: 12px !important;
+        line-height: 1.5 !important;
+    }
+}
+
+/* ==============================================
+   SMALL MOBILE BREAKPOINT (below 480px)
+   ============================================== */
+@media (max-width: 479px) {
+    .payment-methods {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+
+    .amount-presets {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+    }
+
+    .amount-preset {
+        padding: 8px 4px;
+        font-size: 11px;
+    }
+
+    .pay-method {
+        min-height: 80px;
+        padding: 8px 6px;
+    }
+
+    .pay-method-icon {
+        font-size: 20px;
+        margin-bottom: 2px;
+    }
+
+    .pay-method-name {
+        font-size: 11px;
+    }
+
+    .pay-method-tag {
+        font-size: 8px;
+    }
+
+    .balance-amount {
+        font-size: 18px;
+    }
+
+    .min-max-value {
+        font-size: 14px;
+    }
+
+    .section-label-inline {
+        font-size: 12px;
+        margin: 12px 0 8px 0;
+    }
+
+    .form-input {
+        padding: 10px !important;
+        font-size: 15px !important;
+    }
+
+    .card-header {
+        padding: 12px !important;
+    }
+
+    .card-body {
+        padding: 12px !important;
+    }
+
+    .card-title {
+        font-size: 14px !important;
+    }
+
+    .btn-primary {
+        padding: 11px 12px !important;
+        font-size: 13px !important;
+    }
+}
+
+/* Accessibility Improvements */
+@media (prefers-reduced-motion: reduce) {
+    .pay-method,
+    .amount-preset,
+    .form-input,
+    .upload-zone,
+    .btn-primary {
+        transition: none;
+    }
+
+    .pay-method:hover,
+    .amount-preset:active {
+        transform: none;
+    }
+}
+
+@media(min-width:768px){
+  .profile-stats{grid-template-columns:repeat(4,1fr)}
+  .avatar-preview{width:92px;height:92px;font-size:32px}
+}
