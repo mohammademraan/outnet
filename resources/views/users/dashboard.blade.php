@@ -31,6 +31,11 @@
                 <p class="on-stat-value" style="font-size:2.75rem;">
                     ${{ number_format($userData['total_funds'] ?? 0, 2) }}
                 </p>
+                @if (($userData['pending_deposits'] ?? 0) > 0)
+                    <p class="fs-10 mt-2 mb-0" style="color:#b45309;">
+                        ${{ number_format($userData['pending_deposits'], 2) }} in deposits awaiting approval
+                    </p>
+                @endif
 
                 <div class="d-grid mt-4">
                     <a href="{{ route('generate.order') }}" class="btn btn-dark py-3">

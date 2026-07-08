@@ -67,7 +67,8 @@
 
   /* ─── Event listeners ────────────────────────────────────────── */
   if (menuToggle) {
-    menuToggle.addEventListener('click', function () {
+    menuToggle.addEventListener('click', function (e) {
+      e.stopPropagation();
       if (drawer && drawer.classList.contains('open')) {
         closeDrawer();
         hideOverlay();
@@ -78,7 +79,8 @@
   }
 
   if (drawerClose) {
-    drawerClose.addEventListener('click', function () {
+    drawerClose.addEventListener('click', function (e) {
+      e.stopPropagation();
       closeDrawer();
       hideOverlay();
     });
@@ -96,13 +98,22 @@
     });
   }
 
-  if (overlay) {
-    overlay.addEventListener('click', function () {
+  /* Close drawer when clicking outside */
+  document.addEventListener('click', function (e) {
+    if (!drawer || !drawer.classList.contains('open')) return;
+    if (drawer.contains(e.target)) return;
+    closeDrawer();
+    hideOverlay();
+  });
+
+  /* Close drawer after clicking a link inside it */
+  var drawerLinks = document.querySelectorAll('.on-drawer-nav a');
+  drawerLinks.forEach(function (link) {
+    link.addEventListener('click', function () {
       closeDrawer();
-      closeAccountDd();
       hideOverlay();
     });
-  }
+  });
 
   /* Close account dropdown when clicking outside */
   document.addEventListener('click', function (e) {
@@ -119,6 +130,15 @@
     if (e.key !== 'Escape') return;
     if (drawer && drawer.classList.contains('open')) { closeDrawer(); hideOverlay(); }
     if (accountDd && accountDd.classList.contains('open')) { closeAccountDd(); hideOverlay(); }
+  });
+
+  /* Close account dropdown after clicking a link inside it */
+  var accountLinks = document.querySelectorAll('.on-account-dropdown a');
+  accountLinks.forEach(function (link) {
+    link.addEventListener('click', function () {
+      closeAccountDd();
+      hideOverlay();
+    });
   });
 
   /* ─── Preloader dismiss ─────────────────────────────────────── */

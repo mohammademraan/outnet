@@ -22,6 +22,11 @@
     <div class="on-card text-center">
         <p class="on-stat-label mb-2">Total Balance &middot; USD</p>
         <p class="on-stat-value" style="font-size:2.5rem;">${{ number_format($totalBalance ?? 0, 2) }}</p>
+        @if (($pendingDeposit ?? 0) > 0)
+            <p class="fs-10 mt-2 mb-0" style="color:#b45309;">
+                ${{ number_format($pendingDeposit, 2) }} in deposits awaiting approval &mdash; not yet in your balance
+            </p>
+        @endif
         <p class="mt-3 mb-0">
             <a href="{{ route('user.recharge-history') }}" class="on-text-link fs-10">View deposit history</a>
         </p>

@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Auth;
 
 class OrdersController extends Controller
 {
-    private const SELECTED_TASK_COMMISSION_RATE = 0.18;
     /**
      * Display a listing of the resource.
      *
@@ -24,12 +23,16 @@ class OrdersController extends Controller
     {
         $user = Auth::user();
 
-        // Calculate the available balance for the user
+        // Calculate the available balance for the user.
+        // Pending funds are excluded — only admin-approved (active) and
+        // deactive (reset-order) records count, matching every other balance calc.
         $funds = Funds::where('user_id', $user->id)
         ->whereIn('type', ['deposit', 'commission'])
+        ->whereIn('status', ['active', 'deactive'])
         ->sum('amount')
         - Funds::where('user_id', $user->id)
             ->where('type', 'withdrawal')
+            ->whereIn('status', ['active', 'deactive'])
             ->sum('amount');
 
         // Get today's completed orders count
@@ -85,7 +88,7 @@ class OrdersController extends Controller
 
                 foreach ($orders as $order) {
                     $orderPrice = $order->price;
-                    $commissionRate = self::SELECTED_TASK_COMMISSION_RATE; // selected-order special rate
+                    $commissionRate = 0.27; // selected-order special rate
                     $commission = round($orderPrice * $commissionRate, 2);
                     $totalAmount = $orderPrice + $commission;
 
@@ -190,6 +193,23 @@ class OrdersController extends Controller
                     ->first();
 
         if ($order) {
+            // Server-side balance guard: the task can only be submitted when the
+            // user's approved balance covers the order price. Pending deposits do
+            // not count until admin approves them.
+            $balance = Funds::where('user_id', $user->id)
+                ->whereIn('type', ['deposit', 'commission'])
+                ->whereIn('status', ['active', 'deactive'])
+                ->sum('amount')
+                - Funds::where('user_id', $user->id)
+                    ->where('type', 'withdrawal')
+                    ->whereIn('status', ['active', 'deactive'])
+                    ->sum('amount');
+
+            if (($order->orderList->price ?? 0) > $balance) {
+                return redirect()->route('user.recharge')->with('error',
+                    'Insufficient balance to submit this task. Please recharge — pending deposits must be approved by admin before they count toward your balance.');
+            }
+
             // Update the order status to Complete
             $order->type = 'Complete';
             $order->save();
@@ -202,7 +222,7 @@ class OrdersController extends Controller
                 $isSelected = SelectedOrder::where('user_id', $user->id)
                     ->where('order_list_id', $orderList->id)
                     ->exists();
-                $commissionRate = $isSelected ? self::SELECTED_TASK_COMMISSION_RATE : ($membership->commission / 100);
+                $commissionRate = $isSelected ? 0.27 : ($membership->commission / 100);
                 $commission = round($orderList->price * $commissionRate, 2);
             }
 
@@ -297,11 +317,14 @@ class OrdersController extends Controller
         $today = now()->format('Y-m-d');
 
         // Fetch user's funds (deposit + commission - withdrawal)
+        // Pending funds are excluded — only admin-approved money counts.
         $funds = Funds::where('user_id', $userId)
                     ->whereIn('type', ['deposit', 'commission'])
+                    ->whereIn('status', ['active', 'deactive'])
                     ->sum('amount')
                     - Funds::where('user_id', $userId)
                         ->where('type', 'withdrawal')
+                        ->whereIn('status', ['active', 'deactive'])
                         ->sum('amount');
 
         // Fetch today's orders and their counts
@@ -316,7 +339,6 @@ class OrdersController extends Controller
         // Fetch the selected orders for the user, if any
         $selectedOrders = SelectedOrder::where('user_id', $userId)->get();
         $selectedOrderIds = $selectedOrders->pluck('order_list_id')->flatten()->toArray();
-        $selectedCommissionRate = self::SELECTED_TASK_COMMISSION_RATE;
 
         // Fetch the one incomplete order
         $oneIncompleteOrder = Orders::where('user_id', $userId)
@@ -334,7 +356,7 @@ class OrdersController extends Controller
                                     $orderPrice = $order->orderList->price;
                                     $commission = $order->commission_amount ?? null;
                                     if (is_null($commission)) {
-                                        $commissionRate = in_array($order->orderList->id, $selectedOrderIds) ? self::SELECTED_TASK_COMMISSION_RATE : ($membership->commission / 100);
+                                        $commissionRate = in_array($order->orderList->id, $selectedOrderIds) ? 0.27 : ($membership->commission / 100);
                                         $commission = round($orderPrice * $commissionRate, 2);
                                     }
                                     $totalAmount = $orderPrice + $commission;
@@ -359,7 +381,7 @@ class OrdersController extends Controller
                                 $orderPrice = $order->orderList->price;
                                 $commission = $order->commission_amount ?? null;
                                 if (is_null($commission)) {
-                                    $commissionRate = in_array($order->orderList->id, $selectedOrderIds) ? self::SELECTED_TASK_COMMISSION_RATE : ($membership->commission / 100);
+                                    $commissionRate = in_array($order->orderList->id, $selectedOrderIds) ? 0.27 : ($membership->commission / 100);
                                     $commission = round($orderPrice * $commissionRate, 2);
                                 }
                                 $totalAmount = $orderPrice + $commission;
@@ -375,7 +397,14 @@ class OrdersController extends Controller
                                 ];
                             });
 
-        return view('users.tasks', compact('oneIncompleteOrder', 'completedOrders', 'onHoldOrders', 'funds', 'selectedOrderIds', 'membership', 'selectedCommissionRate'));
+        // Deposits awaiting admin approval — surfaced so the user knows why
+        // pending money is not part of their usable balance
+        $pendingDeposits = Funds::where('user_id', $userId)
+                                ->where('type', 'deposit')
+                                ->where('status', 'pending')
+                                ->sum('amount');
+
+        return view('users.tasks', compact('oneIncompleteOrder', 'completedOrders', 'onHoldOrders', 'funds', 'selectedOrderIds', 'membership', 'pendingDeposits'));
     }
 
     public function processOrder(Request $request)
@@ -396,6 +425,22 @@ class OrdersController extends Controller
                        ->first();
 
         if ($order) {
+            // Server-side balance guard: pending deposits do not count until
+            // admin approves them.
+            $balance = Funds::where('user_id', $user->id)
+                ->whereIn('type', ['deposit', 'commission'])
+                ->whereIn('status', ['active', 'deactive'])
+                ->sum('amount')
+                - Funds::where('user_id', $user->id)
+                    ->where('type', 'withdrawal')
+                    ->whereIn('status', ['active', 'deactive'])
+                    ->sum('amount');
+
+            if (($order->orderList->price ?? 0) > $balance) {
+                return redirect()->route('user.recharge')->with('error',
+                    'Insufficient balance to submit this task. Please recharge — pending deposits must be approved by admin before they count toward your balance.');
+            }
+
             // Update the order status to Complete
             $order->type = 'Complete';
             $order->save();
@@ -408,7 +453,7 @@ class OrdersController extends Controller
                 $isSelected = SelectedOrder::where('user_id', $user->id)
                     ->where('order_list_id', $orderList->id)
                     ->exists();
-                $commissionRate = $isSelected ? self::SELECTED_TASK_COMMISSION_RATE : ($membership->commission / 100);
+                $commissionRate = $isSelected ? 0.27 : ($membership->commission / 100);
                 $commission = round($orderList->price * $commissionRate, 2);
             }
 

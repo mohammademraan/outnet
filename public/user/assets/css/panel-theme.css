@@ -265,7 +265,7 @@ h1, h2, h3, h4, h5, h6,
   width: 220px;
   background: var(--on-white);
   border: 1px solid var(--on-gray-light);
-  z-index: 2000;
+  z-index: 2100;
   opacity: 0;
   pointer-events: none;
   transform: translateY(8px);
@@ -400,7 +400,7 @@ h1, h2, h3, h4, h5, h6,
 }
 .on-overlay.visible {
   opacity: 1;
-  pointer-events: auto;
+  pointer-events: none;
 }
 
 /* ═══════════════════════════════════════════════════════════════════
