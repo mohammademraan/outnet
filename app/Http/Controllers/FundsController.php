@@ -105,10 +105,18 @@ class FundsController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'id' => 'required|integer|exists:users,id',
+            'amount' => 'required|numeric|min:0.01',
+            'type' => 'required|in:deposit,withdrawal,commission',
+        ]);
+
         $funds = new Funds();
         $funds->user_id = $request->input('id');
         $funds->amount = $request->input('amount');
         $funds->type = $request->input('type');
+        // Admin-added funds are pre-approved — explicitly active, not pending
+        $funds->status = 'active';
         $funds->save();
 
         return redirect('/administration')->with('funds_success', 'Your funds has been successfully added');

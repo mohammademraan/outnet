@@ -46,7 +46,7 @@
     <div class="d-grid mt-4">
         <button type="button"
                 class="btn btn-dark py-3"
-                onclick="if(window.LC_API){window.LC_API.open_chat_window();}else{alert('Chat is currently unavailable. Please email support@theoutnet.com');}">
+                onclick="if(window.LiveChatWidget){window.LiveChatWidget.call('maximize');}else{alert('Chat is currently unavailable. Please email support@theoutnet.com');}">
             Start Live Chat
         </button>
     </div>

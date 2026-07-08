@@ -191,6 +191,12 @@ class ProfileController extends Controller
         $taskLimit = optional($user->membershipLevel)->task_limit ?? optional($user->membershipLevel)->order_limit ?? 0;
         $tasksRemaining = max(0, $taskLimit - $totalTodayOrders);
 
+        // Deposits awaiting admin approval — shown separately, never in the balance
+        $pendingDeposits = $user->funds()
+            ->where('type', 'deposit')
+            ->where('status', 'pending')
+            ->sum('amount');
+
         // Prepare the data to be passed to the dashboard view
         $userData = [
             'user' => $user,
@@ -208,6 +214,7 @@ class ProfileController extends Controller
             'referrals_count' => $referralsCount,
             'tasks_remaining' => $tasksRemaining,
             'order_limit' => $taskLimit,
+            'pending_deposits' => $pendingDeposits,
         ];
 
         // Render the dashboard view with prepared data
@@ -400,7 +407,16 @@ class ProfileController extends Controller
             $totalBalance -= $orderPrice;
         }
 
-        return view('users.recharge', ['totalBalance' => $totalBalance]);
+        // Deposits awaiting admin approval — shown separately, never in the balance
+        $pendingDeposit = Funds::where('user_id', $user->id)
+                               ->where('type', 'deposit')
+                               ->where('status', 'pending')
+                               ->sum('amount');
+
+        return view('users.recharge', [
+            'totalBalance' => $totalBalance,
+            'pendingDeposit' => $pendingDeposit,
+        ]);
     }
 
     public function showRedemption()
@@ -565,9 +581,10 @@ class ProfileController extends Controller
 
     public function rechargeHistory()
     {
-        // Fetch the recharge history for the authenticated user with active status
+        // Fetch the deposit history — pending requests are included so the
+        // user can see funds awaiting admin approval
         $rechargeHistory = Funds::where('user_id', Auth::id())
-                                ->where('status', 'active')
+                                ->whereIn('status', ['active', 'pending'])
                                 ->where('type', 'deposit')
                                 ->orderBy('created_at', 'desc')
                                 ->take(10)
@@ -578,10 +595,10 @@ class ProfileController extends Controller
 
     public function redemptionHistory()
     {
-        // Fetch the withdrawal history; leftJoin so records still appear
-        // when the user has no linked wallet yet
+        // Fetch the withdrawal history — pending requests included; leftJoin
+        // so records still appear when the user has no linked wallet yet
         $redemptionHistory = Funds::where('funds.user_id', Auth::id())
-                                  ->where('funds.status', 'active')
+                                  ->whereIn('funds.status', ['active', 'pending'])
                                   ->where('funds.type', 'withdrawal')
                                   ->leftJoin('user_vallets', 'user_vallets.user_id', '=', 'funds.user_id')
                                   ->select('funds.*', 'user_vallets.vallet_address', 'user_vallets.type as wallet_type')

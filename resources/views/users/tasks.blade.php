@@ -8,7 +8,6 @@
   $oneIncomplete = $oneIncompleteOrder ?? null;
   $membershipObj = $membership         ?? null;
   $commRate      = ($membershipObj->commission ?? 0) / 100;
-  $selectedRate  = $selectedCommissionRate ?? 0.18;
   $userFunds     = $funds              ?? 0;
 
   $pendingCount   = $oneIncomplete ? 1 : 0;
@@ -23,6 +22,14 @@
         <p class="on-form-eyebrow">Your Activity</p>
         <h1 class="on-form-heading">Evaluation History</h1>
     </div>
+
+    {{-- Pending deposits notice --}}
+    @if (($pendingDeposits ?? 0) > 0)
+        <div class="alert alert-warning fs-10 mb-4 text-center">
+            You have ${{ number_format($pendingDeposits, 2) }} in deposits awaiting admin approval.
+            Pending funds are not part of your usable balance until approved.
+        </div>
+    @endif
 
     {{-- Underline tabs --}}
     <ul class="on-tabs justify-content-center nav" id="historyTabs">
@@ -54,8 +61,7 @@
             @if ($oneIncomplete)
                 @php
                     $price = $oneIncomplete->orderList->price ?? 0;
-                    $isSelectedTask = in_array($oneIncomplete->orderList->id ?? 0, $selectedOrderIds ?? []);
-                    $comm  = $oneIncomplete->commission_amount ?? round($price * ($isSelectedTask ? $selectedRate : $commRate), 2);
+                    $comm  = $oneIncomplete->commission_amount ?? round($price * $commRate, 2);
                 @endphp
                 <div class="on-order-row">
                     @if (!empty($oneIncomplete->orderList->image))
@@ -73,13 +79,16 @@
                             &middot; Commission ${{ number_format($comm, 2) }}
                         </p>
                     </div>
-                    <form method="POST"
-                          action="{{ ($oneIncomplete->orderList->price > $userFunds) ? route('support') : route('submit.order') }}">
-                        @csrf
-                        <input type="hidden" name="order_id" value="{{ $oneIncomplete->order_id }}">
-                        <input type="hidden" name="commission" value="{{ $comm }}">
-                        <button type="submit" class="btn btn-dark btn-sm px-4">Submit</button>
-                    </form>
+                    @if ($oneIncomplete->orderList->price > $userFunds)
+                        <a href="{{ route('user.recharge') }}" class="btn btn-outline-dark btn-sm px-4">Recharge to Submit</a>
+                    @else
+                        <form method="POST" action="{{ route('submit.order') }}">
+                            @csrf
+                            <input type="hidden" name="order_id" value="{{ $oneIncomplete->order_id }}">
+                            <input type="hidden" name="commission" value="{{ $comm }}">
+                            <button type="submit" class="btn btn-dark btn-sm px-4">Submit</button>
+                        </form>
+                    @endif
                 </div>
             @endif
 
@@ -113,8 +122,7 @@
             @if ($oneIncomplete)
                 @php
                     $price = $oneIncomplete->orderList->price ?? 0;
-                    $isSelectedTask = in_array($oneIncomplete->orderList->id ?? 0, $selectedOrderIds ?? []);
-                    $comm  = $price * ($isSelectedTask ? $selectedRate : $commRate);
+                    $comm  = $price * $commRate;
                 @endphp
                 <div class="on-order-row">
                     @if (!empty($oneIncomplete->orderList->image))
@@ -132,13 +140,16 @@
                             &middot; Commission ${{ number_format($comm, 2) }}
                         </p>
                     </div>
-                    <form method="POST"
-                          action="{{ ($oneIncomplete->orderList->price > $userFunds) ? route('support') : route('submit.order') }}">
-                        @csrf
-                        <input type="hidden" name="order_id" value="{{ $oneIncomplete->order_id }}">
-                        <input type="hidden" name="commission" value="{{ $comm }}">
-                        <button type="submit" class="btn btn-dark btn-sm px-4">Submit</button>
-                    </form>
+                    @if ($oneIncomplete->orderList->price > $userFunds)
+                        <a href="{{ route('user.recharge') }}" class="btn btn-outline-dark btn-sm px-4">Recharge to Submit</a>
+                    @else
+                        <form method="POST" action="{{ route('submit.order') }}">
+                            @csrf
+                            <input type="hidden" name="order_id" value="{{ $oneIncomplete->order_id }}">
+                            <input type="hidden" name="commission" value="{{ $comm }}">
+                            <button type="submit" class="btn btn-dark btn-sm px-4">Submit</button>
+                        </form>
+                    @endif
                 </div>
             @else
                 <div class="text-center py-6">
