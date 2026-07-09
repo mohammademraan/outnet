@@ -65,9 +65,9 @@
                     <!-- ============================================================== -->
                     <!-- Logo -->
                     <!-- ============================================================== -->
-                    <div class="navbar-brand">
+                    <div class="navbar-brand" style="min-width:80px;">
                         <a href="{{ route('admin.dashboard') }}" class="logo"
-                           style="display:flex;align-items:center;padding:0 5px;font-weight:700;font-size:16px;letter-spacing:1px;color:#ffffff;text-decoration:none;">
+                           style="display:inline-block;padding:5px 10px;font-weight:700;font-size:16px;letter-spacing:1px;color:#ffffff;text-decoration:none;line-height:1;white-space:nowrap;">
                             OUTNET
                         </a>
                     </div>
