@@ -5,19 +5,17 @@
 {{-- ═══ Hero Split ═══════════════════════════════════════════════ --}}
 <section class="on-hero-split">
 
-    <div class="on-hero-panel">
+    <a href="{{ route('register') }}" class="on-hero-panel">
         <div class="on-hero-bg"
              style="background-image:url({{ asset('images/w1500_q80.jpg') }})">
         </div>
-        <a href="{{ route('register') }}" class="on-hero-cta">Shop Women&rsquo;s</a>
-    </div>
+    </a>
 
-    <div class="on-hero-panel">
+    <a href="{{ route('register') }}" class="on-hero-panel">
         <div class="on-hero-bg"
              style="background-image:url({{ asset('images/' . rawurlencode('w1500_q80 (1).jpg')) }})">
         </div>
-        <a href="{{ route('register') }}" class="on-hero-cta">Shop Men&rsquo;s</a>
-    </div>
+    </a>
 
 </section>
 
