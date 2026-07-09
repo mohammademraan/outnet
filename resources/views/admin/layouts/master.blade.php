@@ -65,10 +65,8 @@
                     <!-- ============================================================== -->
                     <!-- Logo -->
                     <!-- ============================================================== -->
-                    <div class="navbar-brand" style="display:block!important;min-width:100px!important;">
-                        <a href="{{ route('admin.dashboard') }}" style="display:block!important;padding:8px 12px!important;font-weight:700!important;font-size:16px!important;letter-spacing:1px!important;color:#ffffff!important;text-decoration:none!important;background-color:rgba(255,255,255,0.1)!important;border-radius:4px!important;">
-                            OUTNET
-                        </a>
+                    <div class="navbar-brand">
+                        <a href="{{ route('admin.dashboard') }}" class="logo" style="color: #fff; font-weight: bold;">OUTNET</a>
                     </div>
                     <!-- ============================================================== -->
                     <!-- End Logo -->
