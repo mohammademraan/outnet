@@ -67,10 +67,8 @@
                     <!-- ============================================================== -->
                     <div class="navbar-brand">
                         <a href="{{ route('admin.dashboard') }}" class="logo"
-                           style="display:flex;align-items:center;padding:4px 0;">
-                            <img src="{{ asset('admin/assets/images/logo.png') }}"
-                                 alt="Outnet"
-                                 style="height:44px;width:auto;max-width:200px;object-fit:contain;display:block;">
+                           style="display:flex;align-items:center;padding:4px 0;font-weight:700;font-size:20px;letter-spacing:1px;color:#fff;">
+                            OUTNET
                         </a>
                     </div>
                     <!-- ============================================================== -->

@@ -29,9 +29,8 @@
             <div class="auth-box">
                 <div id="loginform">
                     <div class="logo">
-                        <span class="db">
-                            <img src="{{ asset('admin/assets/images/logo.png') }}"
-                                 alt="Outnet" width="50">
+                        <span class="db" style="font-weight:700;font-size:28px;letter-spacing:2px;color:#333;display:block;margin-bottom:10px;">
+                            OUTNET
                         </span>
                         <h5 class="font-medium m-b-5 m-t-10">Sign In to Admin Panel</h5>
                         <p class="text-muted font-12">
