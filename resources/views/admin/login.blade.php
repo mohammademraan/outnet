@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('admin/assets/images/favicon.png') }}">
-    <title>Admin Login – Fashion Nova</title>
+    <title>Admin Login – Outnet</title>
     <link href="{{ asset('admin/dist/css/style.min.css') }}" rel="stylesheet">
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -31,7 +31,7 @@
                     <div class="logo">
                         <span class="db">
                             <img src="{{ asset('admin/assets/images/logo.png') }}"
-                                 alt="Fashion Nova" width="50">
+                                 alt="Outnet" width="50">
                         </span>
                         <h5 class="font-medium m-b-5 m-t-10">Sign In to Admin Panel</h5>
                         <p class="text-muted font-12">

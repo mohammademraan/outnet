@@ -21,7 +21,7 @@
     <meta name="author" content="">
     <!-- Favicon icon -->
     <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('admin/assets/images/favicon.png') }}">
-    <title>@yield('title', 'Dashboard') – Fashion Nova Admin</title>
+    <title>@yield('title', 'Dashboard') – Outnet Admin</title>
     <!-- Custom CSS -->
     <link href="{{ asset('admin/assets/libs/chartist/dist/chartist.min.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/assets/extra-libs/c3/c3.min.css') }}" rel="stylesheet">
@@ -69,7 +69,7 @@
                         <a href="{{ route('admin.dashboard') }}" class="logo"
                            style="display:flex;align-items:center;padding:4px 0;">
                             <img src="{{ asset('admin/assets/images/logo.png') }}"
-                                 alt="Fashion Nova"
+                                 alt="Outnet"
                                  style="height:44px;width:auto;max-width:200px;object-fit:contain;display:block;">
                         </a>
                     </div>
@@ -370,7 +370,7 @@
         <!-- footer -->
         <!-- ============================================================== -->
         <footer class="footer text-center">
-            &copy; {{ date('Y') }} Fashion Nova. All rights reserved.
+            &copy; {{ date('Y') }} Outnet. All rights reserved.
         </footer>
         <!-- ============================================================== -->
         <!-- End footer -->
