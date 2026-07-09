@@ -29,7 +29,7 @@
             <div class="auth-box">
                 <div id="loginform">
                     <div class="logo">
-                        <span class="db" style="font-weight:700;font-size:28px;letter-spacing:2px;color:#333;display:block;margin-bottom:10px;">
+                        <span class="db" style="font-weight:800;font-size:32px;letter-spacing:2px;color:#1a1a2e;display:block;margin-bottom:10px;text-align:center;">
                             OUTNET
                         </span>
                         <h5 class="font-medium m-b-5 m-t-10">Sign In to Admin Panel</h5>
