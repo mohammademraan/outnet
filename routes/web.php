@@ -134,6 +134,7 @@ Route::middleware('admin.auth')->group(function () {
     Route::get('admin/recharge-requests',                       [FundsController::class, 'rechargeRequests'])->name('admin.funds.recharge.requests');
     Route::get('admin/redemption-requests',                     [FundsController::class, 'redemptionRequests'])->name('admin.funds.redemption.requests');
     Route::post('admin/funds/{id}/approve',                     [FundsController::class, 'approve'])->name('admin.funds.approve');
+    Route::post('admin/funds/{id}/reject',                      [FundsController::class, 'reject'])->name('admin.funds.reject');
 
     // Setup / Reset orders
     Route::get('admin/clients/{id}/setup-orders',               [MembersController::class, 'reset_orders'])->name('admin.setup-orders');

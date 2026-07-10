@@ -46,10 +46,16 @@
                                                 <td>{{ $fund->status }}</td>
                                                 <td>
                                                     @if($fund->status === 'pending')
-                                                        <form action="{{ route('admin.funds.approve', $fund->id) }}" method="POST">
-                                                            @csrf
-                                                            <button type="submit" class="btn btn-sm btn-success">Approve</button>
-                                                        </form>
+                                                        <div class="d-flex gap-2">
+                                                            <form action="{{ route('admin.funds.approve', $fund->id) }}" method="POST" style="margin: 0;">
+                                                                @csrf
+                                                                <button type="submit" class="btn btn-sm btn-success">Approve</button>
+                                                            </form>
+                                                            <form action="{{ route('admin.funds.reject', $fund->id) }}" method="POST" style="margin: 0;">
+                                                                @csrf
+                                                                <button type="submit" class="btn btn-sm btn-danger">Reject</button>
+                                                            </form>
+                                                        </div>
                                                     @else
                                                         -
                                                     @endif

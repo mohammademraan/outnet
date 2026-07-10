@@ -89,6 +89,15 @@ class FundsController extends Controller
         return redirect()->back()->with('success', 'Fund request approved.');
     }
 
+    public function reject($id)
+    {
+        $fund = Funds::findOrFail($id);
+        $fund->status = 'rejected';
+        $fund->save();
+
+        return redirect()->back()->with('success', 'Fund request rejected.');
+    }
+
     /**
      * Show the form for creating a new resource.
      *
