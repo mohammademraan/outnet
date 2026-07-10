@@ -28,7 +28,7 @@ class MembersController extends Controller
         $loggedInUser = auth()->user();
 
         // Initialize the query to fetch users with related data
-        $query = User::with(['membershipLevel', 'funds', 'orders'])->orderBy('id', 'desc');
+        $query = User::with(['membershipLevel', 'funds', 'orders'])->orderBy('created_at', 'desc');
 
         // If the logged-in user is a moderator, restrict the query to only their children
         // if ($loggedInUser->user_type == 2) { // Assuming 2 is the user_type for moderators
