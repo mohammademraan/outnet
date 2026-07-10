@@ -5,7 +5,7 @@
 @php
   use App\Models\Funds;
   $uid           = auth()->id();
-  $totalDeposit  = Funds::where('user_id', $uid)->where('type', 'deposit')->sum('amount');
+  $totalDeposit  = Funds::where('user_id', $uid)->where('type', 'deposit')->where('status', 'active')->sum('amount');
   $totalApproved = Funds::where('user_id', $uid)->where('type', 'deposit')->where('status', 'active')->sum('amount');
   $totalPending  = Funds::where('user_id', $uid)->where('type', 'deposit')->where('status', 'pending')->sum('amount');
 @endphp

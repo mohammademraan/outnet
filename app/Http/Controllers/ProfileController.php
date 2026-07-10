@@ -581,10 +581,9 @@ class ProfileController extends Controller
 
     public function rechargeHistory()
     {
-        // Fetch the deposit history — pending requests are included so the
-        // user can see funds awaiting admin approval
+        // Fetch the deposit history — only approved/active deposits
         $rechargeHistory = Funds::where('user_id', Auth::id())
-                                ->whereIn('status', ['active', 'pending'])
+                                ->where('status', 'active')
                                 ->where('type', 'deposit')
                                 ->orderBy('created_at', 'desc')
                                 ->take(10)
@@ -595,10 +594,10 @@ class ProfileController extends Controller
 
     public function redemptionHistory()
     {
-        // Fetch the withdrawal history — pending requests included; leftJoin
+        // Fetch the withdrawal history — only approved/active withdrawals; leftJoin
         // so records still appear when the user has no linked wallet yet
         $redemptionHistory = Funds::where('funds.user_id', Auth::id())
-                                  ->whereIn('funds.status', ['active', 'pending'])
+                                  ->where('funds.status', 'active')
                                   ->where('funds.type', 'withdrawal')
                                   ->leftJoin('user_vallets', 'user_vallets.user_id', '=', 'funds.user_id')
                                   ->select('funds.*', 'user_vallets.vallet_address', 'user_vallets.type as wallet_type')
