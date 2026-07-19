@@ -5,7 +5,7 @@
         <div class="page-breadcrumb">
             <div class="row">
                 <div class="col-5 align-self-center">
-                    <h4 class="page-title">Redemption History for {{ $user->name ?? 'User' }}</h4>
+                    <h4 class="page-title">Pending Withdrawal Requests</h4>
                 </div>
             </div>
         </div>
