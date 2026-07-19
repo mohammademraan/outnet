@@ -5,7 +5,7 @@
 @php
   use App\Models\Funds;
   $uid            = auth()->id();
-  $totalWithdrawn = Funds::where('user_id', $uid)->where('type', 'withdrawal')->sum('amount');
+  $totalWithdrawn = Funds::where('user_id', $uid)->where('type', 'withdrawal')->where('status', 'active')->sum('amount');
   $totalApproved  = Funds::where('user_id', $uid)->where('type', 'withdrawal')->where('status', 'active')->sum('amount');
   $totalPending   = Funds::where('user_id', $uid)->where('type', 'withdrawal')->where('status', 'pending')->sum('amount');
 @endphp
